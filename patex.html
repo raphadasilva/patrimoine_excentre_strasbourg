@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Le patrimoine excentré de Strasbourg</title>
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.css' rel='stylesheet' />
+
+<style>
+  body { margin:0; padding:0; font-family:Arial; }
+  p {left:0; top:5; font-size:1em;}
+  h4 {  font-size:0.9em; margin-top:5px;}
+  h3 {  font-size:1em;margin-top:5px;}
+  #map { position:absolute; top:0; bottom:0; width:500px; height:560px; }
+  #map-ui {
+    position: absolute;
+    top: 480px;
+    left: 120px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 100;
+}
+
+#map-ui li{
+	float: left;
+	border-color: fff;
+	padding: 10px;
+}
+
+#map-ui a {
+    font: normal 13px/18px 'Helvetica Neue', Helvetica, sans-serif;
+    background: #FFF;
+    color: #3C4E5A;
+    display: block;
+    margin: 0;
+    padding: 5px;
+    border: 2px solid #fff;
+    border-bottom-width: 0;
+    min-width: 95px;
+    padding: 10px;
+    text-decoration: none;
+    text-align: center;
+    float: left;
+}
+
+#map-ui a:hover {
+    background: #ECF5FA;
+}
+
+#map-ui li:last-child a {
+    border-bottom-width: 1px;
+    -webkit-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
+}
+
+#map-ui li:first-child a {
+    -webkit-border-radius: 3px 3px 0 0;
+    border-radius: 3px 3px 0 0;
+}
+
+#map-ui a.active {
+    background: #007bff;
+    border-color: #007bff;
+    color: #FFF;
+}
+
+</style>
+
+</head>
+<body>
+
+<ul id='map-ui'></ul>
+<div id='map'></div>
+
+<script>
+
+// on commence par la déclaration de la carte
+var map = L.mapbox.map('map', 'raphadasilva.h9faifpd', {minZoom: 12,maxZoom: 16,zoomControl: false})
+    .setView([48.57, 7.75], 12);
+var ui = document.getElementById('map-ui');
+
+// on déclare un premier calque qui servira plus tard pour les marqueurs
+var myLayer = L.mapbox.featureLayer().addTo(map);
+
+// on ajoute ensuite deux calques "tuile" (pas besoin d'interactivité dans notre cas)
+addLayer(L.mapbox.tileLayer('raphadasilva.jsnyiudi'), 'Vélo', 1);
+addLayer(L.mapbox.tileLayer('raphadasilva.63aexw29'), 'Bus et tram', 2);
+
+
+// on détaille la fonction addLayer() qui permet notamment de cocher/décocher un calque "tuile"
+function addLayer(layer, name, zIndex) {
+    layer
+        .setZIndex(zIndex)
+        .addTo(map);
+
+
+    var item = document.createElement('li');
+    var link = document.createElement('a');
+
+    link.href = '#';
+    link.className = 'active';
+    link.innerHTML = name;
+
+    link.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (map.hasLayer(layer)) {
+            map.removeLayer(layer);
+            this.className = '';
+        } else {
+            map.addLayer(layer);
+            this.className = 'active';
+        }
+    };
+
+    item.appendChild(link);
+    ui.appendChild(item);
+}
+
+
+// on déclare ensuite nos marqueurs formatés en geojson
+var geoJson = [{"features":[{"id":"Cité-jardin du Stockfeld","properties":{"hauteur":208,"marker-color":"#169c40","marker-symbol":"park2","Photo":"images_cartes/cite_jardin_min.JPG","title":"Cité-jardin du Stockfeld","Auteur":"Raphaël da Silva","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dcit%e9\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d7\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28cit%e9%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"La cité-jardin du Stockfeld sort de terre au début du XXe siècle, alors que ce nouvel idéal urbain est en plein essor. Destiné à reloger les populations du centre, le projet d\u0027Edouard Schimpf est basé sur des ilôts géométriques.","marker-size":"medium","geo_longitude":7.7722112,"geo_latitude":48.5310042},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7722112,48.5310042]}},{"id":"Ancien silo à céréales","properties":{"hauteur":169,"marker-color":"#169c40","marker-symbol":"industrial","Photo":"images_cartes/silo_min.JPG","title":"Ancien silo à céréales","Auteur":"Mathilde Muller","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dsilo\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d8\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28silo%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Entièrement en béton armé, ce silo à céréales situé à côté de la \u0027Malterie\u0027 (photo) a été totalement démoli, car son inscription aux monuments historiques a été trop tardive.","marker-size":"medium","geo_longitude":7.7910972,"geo_latitude":48.5801361},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7910972,48.5801361]}},{"id":"Propriété Schranz","properties":{"hauteur":180,"marker-color":"#169c40","marker-symbol":"building","Photo":"images_cartes/prop_privee_min.JPG","title":"Propriété Schranz","Auteur":"Elliott Brown","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003ddes%20sarcelles\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d1\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28des%20sarcelles%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"La \"villa Schranz\", du nom de son premier propriétaire Georges-Louis-Nicolas Schranz, a été construite en 1934 par l\u0027architecte colmarien Jules-Pierre Haas. Elle est située à proximité du Rhin Tortu.","marker-size":"medium","geo_longitude":7.7584811,"geo_latitude":48.5442921},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7584811,48.5442921]}},{"id":"Ancienne usine Junkers","properties":{"hauteur":200,"marker-color":"#169c40","marker-symbol":"industrial","Photo":"images_cartes/usine_min.JPG","title":"Ancienne usine Junkers","Auteur":"Raphaël da Silva","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dusine\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d54\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28usine%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Datant de 1911, le site industriel Emile Mathis fut notamment réquisitionné par la firme Junkers pendant la Seconde Guerre mondiale. Junkers était à l\u0027époque un fleuron de l\u0027aéronautique allemande.","marker-size":"medium","geo_longitude":7.7436233,"geo_latitude":48.560506},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7436233,48.560506]}},{"id":"Poste d\u0027aiguillage S.N.C.F.","properties":{"hauteur":169,"marker-color":"#169c40","marker-symbol":"rail","Photo":"images_cartes/poste_min.JPG","title":"Poste d\u0027aiguillage S.N.C.F.","Auteur":"Raphaël da Silva","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dposte\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d4\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28poste%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Ce poste d\u0027aiguillage du réseau ferroviaire d\u0027Alsace-Lorraine fut construit au début du XXe siècle, sous le contrôle du Reichseisenbahn à Berlin.","marker-size":"medium","geo_longitude":7.7522428,"geo_latitude":48.563387},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7522428,48.563387]}},{"id":"Maison Bowe","properties":{"hauteur":180,"marker-color":"#169c40","marker-symbol":"building","Photo":"images_cartes/prop_privee_min.JPG","title":"Maison Bowe","Auteur":"Elliott Brown","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dmaison\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d52\u0026GRP\u003d1\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28maison%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Cette résidence, inscrite aux monuments historiques en 1995, a une forte influence anglo-saxonne.","marker-size":"medium","geo_longitude":7.7568121,"geo_latitude":48.5690094},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7568121,48.5690094]}},{"id":"Faculté de Droit","properties":{"hauteur":176,"marker-color":"#169c40","marker-symbol":"college","Photo":"images_cartes/faculte_min.JPG","title":"Faculté de Droit","Auteur":"Raphaël da Silva","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003ddroit\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d3\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28droit%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"La Faculté de droit de l\u0027Esplanade est la plus ancienne du campus de ce quartier érigé au début des années 1960. Ce bâtiment imaginé par Roger Hummel et Alfred Kronenberger est remarquable par son plan en courbe et les couleurs de sa façade. ","marker-size":"medium","geo_longitude":7.769066,"geo_latitude":48.578906},"type":"Feature","geometry":{"type":"Point","coordinates":[7.769066,48.578906]}},{"id":"Château d\u0027eau","properties":{"hauteur":212,"marker-color":"#169c40","marker-symbol":"water","Photo":"images_cartes/chateau_min.JPG","title":"Château d\u0027eau","Auteur":"Mathilde Muller","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dchateau\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d8\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28chateau%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Construit à la fin du XIXe siècle, ce château d\u0027eau abrite depuis janvier 2014 le Musée vodou de Strasbourg.","marker-size":"medium","geo_longitude":7.7283605,"geo_latitude":48.5804959},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7283605,48.5804959]}},{"id":"Eglise et presbytère protestants Saint-Paul de Koenigshoffen","properties":{"hauteur":144,"marker-color":"#169c40","marker-symbol":"religious-christian","Photo":"images_cartes/presbytere_min.JPG","title":"Eglise et presbytère protestants Saint-Paul de Koenigshoffen","Auteur":"Raphaël da Silva","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dsaint-paul\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d2\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28saint-paul%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"L\u0027église et le presbytère protestants Saint-Paul de Koenigshoffen sont érigés par Edouard Schimpf entre 1911 et 1914. Ces édifices religieux, construits en briques apparentes, se situent sur les vestiges d\u2019un sanctuaire de Mithra.","marker-size":"medium","geo_longitude":7.7143929,"geo_latitude":48.5782241},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7143929,48.5782241]}},{"id":"Cimetière juif de Koenigshoffen","properties":{"hauteur":179,"marker-color":"#169c40","marker-symbol":"religious-jewish","Photo":"images_cartes/cimetierej_min.JPG","title":"Cimetière juif de Koenigshoffen","Auteur":"Mathilde Muller","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dcimetiere\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d4\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28cimetiere%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Le cimetière israélite de Koenigshoffen fut en activité de 1801 à 1918. De nombreux notables artistes, industriels, militaires et religieux de la ville y reposent.","marker-size":"medium","geo_longitude":7.7164003,"geo_latitude":48.5781178},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7164003,48.5781178]}},{"id":"Breuscheckschlössel","properties":{"hauteur":178,"marker-color":"#169c40","marker-symbol":"monument","Photo":"images_cartes/breusch_min.jpg","title":"Breuscheckschlössel","Auteur":"Ji-Elle (CC BY-SA)","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dplaisance\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d4\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28plaisance%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Ce \"petit château de Breuscheck\", aussi appelé Tour du Schloessel, est une ancienne tour de guet dont la présence est attestée dès le XIVe siècle.","marker-size":"medium","geo_longitude":7.7144867,"geo_latitude":48.5765297},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7144867,48.5765297]}},{"id":"Enceinte urbaine médiévale","properties":{"hauteur":200,"marker-color":"#169c40","marker-symbol":"monument","Photo":"images_cartes/enceinte_min.JPG","title":"Enceinte urbaine médiévale","Auteur":"Raphaël da Silva","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003denceinte\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d4\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28enceinte%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Ce mur d\u0027enceinte remonte au XIVe siècle, alors que la ville connaît son troisième agrandissement.","marker-size":"medium","geo_longitude":7.7379798,"geo_latitude":48.5874239},"type":"Feature","geometry":{"type":"Point","coordinates":[7.7379798,48.5874239]}},{"id":"Château de Pourtalès","properties":{"hauteur":"","marker-color":"#169c40","marker-symbol":"building","Photo":"images_cartes/pourtales_min.JPG","title":"Château de Pourtalès","Auteur":"Mathilde Muller","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dpourtal%e8s\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d2\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28pourtal%e8s%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Situé dans un somptueux parc, ce château du XVIIIe siècle porte le nom du Comte de Pourtalès mais fut en réalité bâtie par la famille industrielle Bussière. C\u0027est aujourd\u0027hui un hôtel de luxe.","marker-size":"medium","geo_longitude":7.79994752909272,"geo_latitude":48.60845745},"type":"Feature","geometry":{"type":"Point","coordinates":[7.79994752909272,48.60845745]}},{"id":"Citadelle et abords","properties":{"hauteur":200,"marker-color":"#169c40","marker-symbol":"monument","Photo":"images_cartes/citadelle_min.JPG","title":"Citadelle et abords","Auteur":"Raphaël da Silva","largeur":300,"source":"http://www.culture.gouv.fr/public/mistral/merimee_fr?ACTION\u003dRETROUVER\u0026FIELD_1\u003dcmer1\u0026VALUE_1\u003dstrasbourg\u0026FIELD_2\u003dcmer4\u0026VALUE_2\u003d\u0026FIELD_3\u003dcmer5\u0026VALUE_3\u003d\u0026FIELD_4\u003dAUTR\u0026VALUE_4\u003d\u0026FIELD_5\u003dTOUT\u0026VALUE_5\u003dabords\u0026FIELD_6\u003dtitre%20courant\u0026VALUE_6\u003d\u0026FIELD_7\u003ddate%20protection\u0026VALUE_7\u003d\u0026FIELD_8\u003dDOSURLP\u0026VALUE_8\u003d%20\u0026NUMBER\u003d15\u0026GRP\u003d0\u0026REQ\u003d%28%28strasbourg%29%20%3aLOCA%2cPLOC%2cINSEE%20%20ET%20%20%28%28abords%29%20%3aTOUT%20%29%29\u0026USRNAME\u003dnobody\u0026USRPWD\u003d4%24%2534P\u0026SPEC\u003d9\u0026SYN\u003d1\u0026IMLY\u003d\u0026MAX1\u003d1\u0026MAX2\u003d100\u0026MAX3\u003d100\u0026DOM\u003dTous","description":"Ce parc abrite des vestiges des fortifications imaginées par Vauban, qui subirent un sévère siège lors de la guerre de 1871","marker-size":"medium","geo_longitude":7.77491646057333,"geo_latitude":48.5757219863234},"type":"Feature","geometry":{"type":"Point","coordinates":[7.77491646057333,48.5757219863234]}}],"type":"FeatureCollection"}
+];
+
+// on prépare la fonction qui customise les infobulles
+myLayer.on('layeradd', function(e) {
+    var marker = e.layer,
+        feature = marker.feature;
+
+    // et voilà pour le contenu de chaque infobulle
+    var popupContent =  '<h4>' + feature.properties.title + '</h4>' +
+                            '<p style="text-align:center;"><img src="' + feature.properties.Photo + '"></p>' +
+                            '<p style="font-size:0.6em;text-align:center;heigth:15px;">Photo : ' + feature.properties.Auteur + '</p>' +
+                        '   <p style="font-size:0.8em;text-align:left;">' + feature.properties.description + '</p>' +
+                        '<a target="_blank" href="' + feature.properties.source + '"><p style="font-size:0.7em;text-align:left;">Source</p></a>';
+
+    // plus d'info là : http://leafletjs.com/reference.html#popup
+    marker.bindPopup(popupContent,{
+        closeButton: true,
+        maxWidth: 300
+    });
+});
+
+// plus qu'à charger tout ça
+myLayer.setGeoJSON(geoJson);   
+
+// cette petite fonction sert à centrer la carte sur un marqueur et à se déplacer de 190 pixels vers le bas pour un meilleur affichage de l'infobulle
+ myLayer.on('click', function(e) {
+        map.panTo(e.layer.getLatLng());
+        map.panBy([0, -190]);
+    });
+
+
+</script>
+
+
+
+</body>
+</html>
